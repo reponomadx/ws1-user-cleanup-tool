@@ -82,18 +82,10 @@ Do **not** commit secrets to GitHub.
 
 ---
 
-## 📁 Example Output
+## 📸 Sample Execution Output
 
-```
-📊 Summary Totals
-----------------------------
-👤 Total in WS1Group1     : 130
-🚫 Disabled in WS1Group1  : 12
-👤 Total in WS1Group2     : 98
-🚫 Disabled in WS1Group2  : 8
-👥 In both groups         : 22
-🚫 Disabled in both       : 6
-```
+![WS1 User Cleanup Screenshot](WS1%20User%20Clean%20Up.jpg)
+
 
 ---
 
