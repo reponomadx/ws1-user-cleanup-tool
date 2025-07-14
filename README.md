@@ -1,4 +1,5 @@
 <img src="reponomadx-logo.jpg" alt="reponomadx logo" width="250"/></img>
+
 # 🧹 Workspace ONE User Cleanup Tool
 
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-blue.svg)](https://docs.microsoft.com/powershell/)
@@ -6,19 +7,20 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![WorkspaceONE](https://img.shields.io/badge/WorkspaceONE-API_Integrated-blueviolet.svg)](https://developer.vmware.com/apis/ws1/)
 
-A PowerShell-based toolset to identify, review, and clean up **inactive Workspace ONE users** and their **device enrollments** across Active Directory and WS1 UEM.
+A fully modular PowerShell-based toolset to identify, review, and clean up **inactive Workspace ONE users** and their **device enrollments** across Active Directory and Workspace ONE UEM.
 
 ---
 
 ## 📂 Tool Structure
 
-This solution consists of three coordinated scripts:
+This solution consists of four coordinated scripts:
 
 | Script | Purpose |
 |--------|---------|
-| `WS1 User Clean Up.ps1` | Compares two AD groups, finds users in both, and identifies disabled accounts. |
-| `WS1 Device Details.ps1` | Queries WS1 for device enrollment info based on AD results using OAuth. |
-| `Remove from AD Group.ps1` | Removes disabled users from their respective WS1 AD groups. |
+| `WS1_User_Cleanup.ps1` | Compares two AD groups, identifies disabled accounts, and finds users in both groups. |
+| `WS1_Device_Info.ps1` | Queries Workspace ONE for enrollment status based on AD results using OAuth. |
+| `WS1_Device_Profiles.ps1` | Queries Workspace ONE for assigned device profiles based on device ID results. |
+| `Remove_From_AD_Group.ps1` | Removes disabled users from their respective AD groups using the processed CSV files. |
 
 ---
 
@@ -28,85 +30,95 @@ This solution consists of three coordinated scripts:
 - **RSAT: ActiveDirectory module**
 - **Workspace ONE API client** (OAuth 2.0 `client_id` and `client_secret`)
 - Access to Workspace ONE UEM API (e.g., `https://your-env.awmdm.com/api`)
-- CSVs generated from step-by-step usage
+- CSV files generated from the tool’s step-by-step usage
 
 ---
 
 ## 🔐 OAuth Configuration
 
-To use the tool, populate the following values in `WS1 Device Details.ps1`:
+To use the tool, populate the following values inside the **Workspace ONE API scripts**:
 
 ```powershell
-$clientId     = "YOUR_CLIENT_ID"
-$clientSecret = "YOUR_CLIENT_SECRET"
-$ws1EnvUrl    = "https://your-env.awmdm.com/API"
+$clientId     = "<Your_Client_ID>"
+$clientSecret = "<Your_Client_Secret>"
+$ws1EnvUrl    = "<Your_Environment_URL>/API"
+$tokenUrl     = "<Your_Token_Endpoint>"
 ```
 
-These values should **only be stored in admin-only secure locations.**  
-Do **not** commit secrets to GitHub.
+These values should **only be stored in secured, admin-only environments**.  
+Do **not commit secrets** to GitHub.
 
 ---
 
 ## 🚀 Usage
 
-### 1️⃣ Compare Two AD Groups
+### 1️⃣ Generate User Lists from AD
 
 ```powershell
-.\WS1 User Clean Up.ps1
+.\WS1_User_Cleanup.ps1
 ```
 
-> ➤ Generates:
-> - `Both_WS1User_Groups.csv`
-> - `Disabled_Accounts_WS1Users.csv`
+> ➡️ Outputs:
+> - `BothGroups.csv`
+> - `PrimaryGroup_Disabled.csv`
+> - `SecondaryGroup_Disabled.csv`
 
 ---
 
-### 2️⃣ Query Workspace ONE Devices
+### 2️⃣ Retrieve Device Enrollment Info
 
 ```powershell
-.\WS1 Device Details.ps1
+.\WS1_Device_Info.ps1
 ```
 
-> ➤ Generates:
-> - `ws1_enrollment.csv`
-> - `WS1_Details_BothADGroups.csv`
+> ➡️ Outputs:
+> - `Enrollment_Status.csv`
+> - `Device_Details.csv`
 
 ---
 
-### 3️⃣ Remove Disabled Users from AD Groups
+### 3️⃣ Query Assigned Device Profiles
 
 ```powershell
-.\Remove from AD Group.ps1
+.\WS1_Device_Profiles.ps1
 ```
 
-> ➤ Uses `Disabled_Accounts_WS1Users.csv` to remove disabled accounts from their AD groups.
+> ➡️ Outputs:
+> - `Device_Profiles.csv`
 
 ---
 
-## 📸 Sample Execution Output
+### 4️⃣ Remove Disabled Users from AD Groups
+
+```powershell
+.\Remove_From_AD_Group.ps1
+```
+
+> ➡️ Processes `PrimaryGroup_Disabled.csv` and `SecondaryGroup_Disabled.csv` to remove disabled users from AD.
+
+---
+
+## 📸 Example Output
 
 ![WS1 User Cleanup Screenshot](WS1%20User%20Clean%20Up.jpg)
-
 
 ---
 
 ## 🛡️ Security Notes
 
-- Store your OAuth credentials securely.
-- Consider using a secure credential vault for storing `client_id` and `client_secret`.
-- Do **not hardcode production credentials** into shared/public scripts.
+- Store API credentials securely.
+- Consider a credential vault (e.g., Windows Credential Manager or Azure Key Vault).
+- Do **not hardcode production credentials** into shared or public repositories.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for full details.
 
 ---
 
 ## ✉️ Author
 
-Created by **Brian Irish**  
-For questions, open an issue on the [GitHub repository](https://github.com/reponomadx/ws1-user-cleanup-tool/)
-
----
+Created and maintained by **Brian Irish**  
+For questions, suggestions, or contributions, open an issue on the [GitHub repository](https://github.com/reponomadx/ws1-user-cleanup-tool).
