@@ -11,6 +11,24 @@ A fully modular PowerShell-based toolset to identify, review, and clean up **ina
 
 ---
 
+## 🏷️ Why This Tool Exists
+
+Many organizations use multiple Active Directory (AD) groups to manage Workspace ONE user enrollments based on device type, ownership model, or feature access. A common example is maintaining **separate enrollment groups** for **corporate-owned devices with limited messaging capabilities** versus standard users. 
+
+Over time, these groups can become cluttered with:
+- **Disabled user accounts**
+- **Stale or inactive enrollments**
+- **Duplicate memberships between groups**
+
+This toolset was developed to streamline **regular auditing and cleanup** of these enrollment groups, ensuring:
+- AD group memberships stay accurate,
+- Workspace ONE enrollment records remain current,
+- And administrative overhead is reduced through automation.
+
+It’s built for environments where **clean enrollment groups lead to smoother provisioning**, reduced licensing waste, and better operational control.
+
+---
+
 ## 📂 Tool Structure
 
 This solution consists of four coordinated scripts:
